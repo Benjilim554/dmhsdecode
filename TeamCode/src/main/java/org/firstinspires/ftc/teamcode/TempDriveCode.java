@@ -12,58 +12,71 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class TempDriveCode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
-        DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
-        DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
-        DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+        int SpeedFactor;
+        int IntakeArmPos;
+        boolean my_1PersonDrive;
+        boolean holdingArmMotors;
 
-     //   frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-     //   backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        DcMotor leftFrontMotor = hardwareMap.get(DcMotor.class, "leftFrontMotor");
+        DcMotor leftBackMotor = hardwareMap.get(DcMotor.class, "leftBackMotor");
+        DcMotor rightFrontMotor = hardwareMap.get(DcMotor.class, "rightFrontMotor");
+        DcMotor rightBackMotor = hardwareMap.get(DcMotor.class, "rightBackMotor");
+        DcMotor intakeFlaps = hardwareMap.get(DcMotor.class, "intakeFlaps");
+        DcMotor leftSpin = hardwareMap.get(DcMotor.class, "leftSpin");
+        DcMotor rightSpin = hardwareMap.get(DcMotor.class, "rightSpin");
 
-        // Retrieve the IMU from the hardware map
-        IMU imu = hardwareMap.get(IMU.class, "imu");
-        // Adjust the orientation parameters to match your robot
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
-        imu.initialize(parameters);
-
+        // Reverse one of the drive motors.
+        my_1PersonDrive = false;
+        SpeedFactor = 1;
+        holdingArmMotors = false;
+        // You will have to determine which motor to reverse for your robot.
+        // In this example, the right motor was reversed so that positive
+        // applied power makes it move the robot in the forward direction.
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        // You will have to determine which motor to reverse for your robot.
+        // In this example, the right motor was reversed so that positive
+        // applied power makes it move the robot in the forward direction.
+        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        // You will have to determine which motor to reverse for your robot.
+        // In this example, the right motor was reversed so that positive
+        // applied power makes it move the robot in the forward direction.
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        // You will have to determine which motor to reverse for your robot.
+        // In this example, the right motor was reversed so that positive
+        // applied power makes it move the robot in the forward direction.
+        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        IntakeArmPos = 0;
         waitForStart();
-
-        if(isStopRequested()) return;
-
-        while(opModeIsActive()) {
-            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x;
-            double rx = gamepad1.right_stick_x;
-
-            // This button choice was made so that it is hard to hit on accident,
-            // it can be freely changed based on preference.
-            // The equivalent button is start on Xbox-style controllers.
-            if (gamepad1.options) {
-                imu.resetYaw();
+        if (opModeIsActive()) {
+            // Put run blocks here.
+            while (opModeIsActive()) {
+                // Put loop blocks here.
+                // The Y axis of a joystick ranges from -1 in its topmost position to +1 in its bottommost position.
+                // We negate this value so that the topmost position corresponds to maximum forward power.
+                leftBackMotor.setPower(((gamepad2.left_stick_y - gamepad2.right_stick_x) - gamepad2.left_stick_x) * SpeedFactor);
+                leftFrontMotor.setPower(((gamepad2.left_stick_y - gamepad2.right_stick_x) + gamepad2.left_stick_x) * SpeedFactor);
+                // The Y axis of a joystick ranges from -1 in its topmost position to +1 in its bottommost position.
+                // We negate this value so that the topmost position corresponds to maximum forward power.
+                rightBackMotor.setPower((gamepad2.left_stick_y + gamepad2.right_stick_x + gamepad2.left_stick_x) * SpeedFactor);
+                rightFrontMotor.setPower(((gamepad2.left_stick_y + gamepad2.right_stick_x) - gamepad2.left_stick_x) * SpeedFactor);
+                if (gamepad1.right_bumper) {
+                    intakeFlaps.setPower(-0.5);
+                } else if (gamepad1.left_bumper) {
+                    intakeFlaps.setPower(0.5);
+                } else {
+                    intakeFlaps.setPower(0);
+                }
+                if (gamepad1.a) {
+                    leftSpin.setPower(-1);
+                    rightSpin.setPower(-1);
+                } else if (gamepad1.b) {
+                    leftSpin.setPower(1);
+                    rightSpin.setPower(1);
+                } else {
+                    leftSpin.setPower(0);
+                    rightSpin.setPower(0);
+                }
             }
-
-            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-
-            // Rotate the movement direction counter to the bot's rotation
-            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-            rotX = rotX * 1.1;  // Counteract imperfect strafing
-
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY - rotX + rx) / denominator;
-            double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY + rotX - rx) / denominator;
-
-            frontLeftMotor.setPower(frontLeftPower);
-            backLeftMotor.setPower(backLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            backRightMotor.setPower(backRightPower);
         }
     }
 }
-
