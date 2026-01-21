@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -16,13 +17,13 @@ public class FlywheelTuning extends OpMode {
     private PIDFController controller;
     private DcMotorEx motor;
     public static double targetVelocity, velocity;
-    public static double P,I,kV,kS;
+    public static double P, I ,kV , kS;
     @Override
     public void init() {
         //TODO: Set motor name and direction
-        motor = hardwareMap.get(DcMotorEx.class, "motorName");
+        motor = (DcMotorEx) hardwareMap.get(DcMotor.class, "motorName");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
-        controller = new PIDFController(P,I,0.0, 0.0);
+        controller = new PIDFController(P, I, 0.0, 0.0);
     }
 
     @Override
