@@ -40,7 +40,7 @@ public class FlywheelTuning extends OpMode {
     public void init() {
         //TODO: Set motor name and direction
         telemetry = new JoinedTelemetry(PanelsTelemetry.INSTANCE.getFtcTelemetry(), telemetry);
-        motor = (DcMotorEx) hardwareMap.get(DcMotor.class, "motorName");
+        motor = (DcMotorEx) hardwareMap.get(DcMotor.class, "hoodEncoder");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         controller = new PIDFController(P, I, 0.0, 0.0);
     }
