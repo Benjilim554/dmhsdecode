@@ -1,3 +1,3 @@
-##Arigato~!
+## Arigato~!
 
 Help me SOS immediately 
