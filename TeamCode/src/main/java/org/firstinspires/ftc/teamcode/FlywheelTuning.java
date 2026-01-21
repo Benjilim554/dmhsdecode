@@ -49,7 +49,7 @@ public class FlywheelTuning extends OpMode {
     public void loop() {
         telemetry.addData("TargetVel", targetVelocity);
         telemetry.addData("CurrentVel", velocity);
-        controller.setPIDF(P,I, 0.0, kV * targetVelocity + kS);
+        controller.setPIDF(P, I, 0.0, kV * targetVelocity + kS);
         velocity = motor.getVelocity();
         motor.setPower(controller.calculate(targetVelocity - velocity));
     }
