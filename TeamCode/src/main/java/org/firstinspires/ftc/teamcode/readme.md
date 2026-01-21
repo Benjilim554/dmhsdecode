@@ -8,6 +8,8 @@ process for adding OpModes is straightforward.
 
 ## Creating your own OpModes
 
+ben is kool
+
 The easiest way to create your own OpMode is to copy a Sample OpMode and make it your own.
 
 Sample opmodes exist in the FtcRobotController module.
