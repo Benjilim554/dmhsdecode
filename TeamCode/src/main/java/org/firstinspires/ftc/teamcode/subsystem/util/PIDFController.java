@@ -11,11 +11,14 @@ public class PIDFController {
     private double lastTime_sec, period;
     private double errorDelta, lastError, compoundedI;
 
-    public PIDFController(double kP, double kI, double kD, double kF) {
+    public PIDFController(double kP, double kI, double kD, double kF, double kV, double kA, double kS) {
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
         this.kF = kF;
+        this.kV = kV;
+        this.kA = kA;
+        this.kS = kS;
     }
 
     /**

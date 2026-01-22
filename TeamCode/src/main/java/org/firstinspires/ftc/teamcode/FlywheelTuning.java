@@ -33,24 +33,36 @@ that you can still get to your target velocity.
 @TeleOp
 public class FlywheelTuning extends OpMode {
     private PIDFController controller;
-    private DcMotorEx motor;
+    private DcMotorEx encoder;
+    private DcMotorEx leftMotor, rightMotor;
     public static double targetVelocity, velocity;
-    public static double P, I ,kV , kS;
+    public static double P, I , kV, kA , kS;
     @Override
     public void init() {
         //TODO: Set motor name and direction
         telemetry = new JoinedTelemetry(PanelsTelemetry.INSTANCE.getFtcTelemetry(), telemetry);
-        motor = (DcMotorEx) hardwareMap.get(DcMotor.class, "hoodEncoder");
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
-        controller = new PIDFController(P, I, 0.0, 0.0);
+
+        encoder = (DcMotorEx) hardwareMap.get(DcMotor.class, "hoodEncoder");
+        leftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftShooterMotor"); // change directions if needed
+        rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightShooterMotor"); // change directions if needed
+
+        encoder.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        controller = new PIDFController(P, I, 0.0, 0.0, kV, 0.0, kS); // PIDF, Feedforward(kV, kA, kS)
     }
 
     @Override
     public void loop() {
-        telemetry.addData("TargetVel", targetVelocity);
-        telemetry.addData("CurrentVel", velocity);
-        controller.setPIDF(P, I, 0.0, kV * targetVelocity + kS);
-        velocity = motor.getVelocity();
-        motor.setPower(controller.calculate(targetVelocity - velocity));
+        telemetry.addLine("==Values==");
+        telemetry.addData("TargetVel: ", targetVelocity);
+        telemetry.addData("CurrentVel: ", velocity);
+
+        controller.setPIDF(P, I, 0.0, 0);
+        controller.setFeedforward(kV, 0, kS);
+
+        velocity = encoder.getVelocity();
+
+        leftMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
+        rightMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
     }
 }
