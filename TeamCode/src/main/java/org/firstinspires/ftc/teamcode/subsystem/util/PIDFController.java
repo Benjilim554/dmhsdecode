@@ -99,7 +99,7 @@ public class PIDFController {
         this.kF = kF;
     }
 
-    // Update PID gains
+    // Update PID gains (lowkenuinely obsolete rn)
     public void setPID(double kP, double kI, double kD, double kF) {
         this.kP = kP;
         this.kI = kI;
