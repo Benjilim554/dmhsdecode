@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import static org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit.AMPS;
+
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.JoinedTelemetry;
 
@@ -10,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.subsystem.util.PIDFController;
 
 import com.bylazar.configurables.annotations.Configurable;
@@ -35,7 +38,7 @@ public class FlywheelTuning extends OpMode {
     private PIDFController controller;
     private DcMotorEx encoder;
     private DcMotorEx leftMotor, rightMotor;
-    public static double targetVelocity, velocity;
+    public static double targetVelocity, encoderVelocity, velocity;
     public static double P, I , kV, kA , kS;
     @Override
     public void init() {
@@ -47,6 +50,7 @@ public class FlywheelTuning extends OpMode {
         rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightHoodMotor"); // change directions if needed
 
         encoder.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         controller = new PIDFController(P, I, 0.0, 0.0, kV, 0.0, 0.1338); // PIDF, Feedforward(kV, kA, kS)
     }
@@ -57,12 +61,15 @@ public class FlywheelTuning extends OpMode {
         telemetry.addData("TargetVel: ", targetVelocity);
         telemetry.addData("CurrentVel: ", velocity);
 
+        telemetry.addLine("==========");
+
         controller.setPIDF(P, I, 0.0, 0);
         controller.setFeedforward(kV, 0, kS);
 
-        velocity = encoder.getVelocity();
+        encoderVelocity = encoder.getVelocity();
+        velocity = (encoderVelocity / 8192f) * 60;
 
         leftMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
-        rightMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
+       // rightMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
     }
 }
