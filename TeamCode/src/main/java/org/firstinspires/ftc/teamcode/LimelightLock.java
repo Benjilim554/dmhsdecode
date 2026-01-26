@@ -17,13 +17,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @TeleOp(name = "Limelight SIMPLE Lock", group = "TeleOp")
-public class THESTINK extends LinearOpMode {
+public class LimelightLock extends LinearOpMode {
 
-    private DcMotor LFM;
-    private DcMotor LBM;
-    private DcMotor RFM;
-    private DcMotor RBM;
-    private DcMotor INTAKE;
+    private DcMotor leftFrontMotor;
+    private DcMotor leftBackMotor;
+    private DcMotor rightFrontMotor;
+    private DcMotor rightBackMotor;
+    private DcMotor intakeMotor;
     private CRServo servo;
     private DcMotorEx leftFlexWheel;
     private DcMotorEx rightFlexWheel;
@@ -50,11 +50,11 @@ public class THESTINK extends LinearOpMode {
         boolean my_1PersonDrive;
         boolean holdingArmMotors;
 
-        LFM = hardwareMap.get(DcMotor.class, "LFM");
-        LBM = hardwareMap.get(DcMotor.class, "LBM");
-        RFM = hardwareMap.get(DcMotor.class, "RFM");
-        RBM = hardwareMap.get(DcMotor.class, "RBM");
-        INTAKE = hardwareMap.get(DcMotor.class, "INTAKE");
+        leftFrontMotor = hardwareMap.get(DcMotor.class, "LFM");
+        leftBackMotor = hardwareMap.get(DcMotor.class, "LBM");
+        rightFrontMotor = hardwareMap.get(DcMotor.class, "RFM");
+        rightBackMotor = hardwareMap.get(DcMotor.class, "RBM");
+        intakeMotor = hardwareMap.get(DcMotor.class, "INTAKE");
         servo = hardwareMap.get(CRServo.class, "servo");
         encoder = hardwareMap.get(DcMotorEx.class, "encoder");
         leftFlexWheel = hardwareMap.get(DcMotorEx.class, "leftFlexWheel");
@@ -78,10 +78,10 @@ public class THESTINK extends LinearOpMode {
         SpeedFactor = 1;
         holdingArmMotors = false;
 
-        LFM.setDirection(DcMotor.Direction.FORWARD);
-        LBM.setDirection(DcMotor.Direction.FORWARD);
-        RFM.setDirection(DcMotor.Direction.REVERSE);
-        RBM.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
 
         IntakeArmPos = 0;
 
@@ -146,10 +146,10 @@ public class THESTINK extends LinearOpMode {
                 telemetry.addData("Average RPM", String.format("%.1f", avgFlyRpm));
 
                 //(DO NOT TOUCH)
-                LBM.setPower(((-gamepad2.left_stick_y + gamepad2.left_stick_x) - gamepad2.right_stick_x) * SpeedFactor);
-                LFM.setPower(((-gamepad2.left_stick_y - gamepad2.left_stick_x) - gamepad2.right_stick_x) * SpeedFactor);
-                RBM.setPower(((-gamepad2.left_stick_y - gamepad2.left_stick_x) + gamepad2.right_stick_x) * SpeedFactor);
-                RFM.setPower((-gamepad2.left_stick_y + gamepad2.left_stick_x + gamepad2.right_stick_x) * SpeedFactor);
+                leftBackMotor.setPower(((-gamepad2.left_stick_y + gamepad2.left_stick_x) - gamepad2.right_stick_x) * SpeedFactor);
+                leftFrontMotor.setPower(((-gamepad2.left_stick_y - gamepad2.left_stick_x) - gamepad2.right_stick_x) * SpeedFactor);
+                rightBackMotor.setPower(((-gamepad2.left_stick_y - gamepad2.left_stick_x) + gamepad2.right_stick_x) * SpeedFactor);
+                rightFrontMotor.setPower((-gamepad2.left_stick_y + gamepad2.left_stick_x + gamepad2.right_stick_x) * SpeedFactor);
 
                 // the lock on limelight part
                 boolean lockOn = gamepad1.options; // okay so trigger doesnt work? so ima switch it to option, just cuz it would work
@@ -160,10 +160,10 @@ public class THESTINK extends LinearOpMode {
                     double str = gamepad2.left_stick_x;
                     double trn = gamepad2.right_stick_x + turnAssist;
 
-                    LBM.setPower(((fwd + str) - trn) * SpeedFactor);
-                    LFM.setPower(((fwd - str) - trn) * SpeedFactor);
-                    RBM.setPower(((fwd - str) + trn) * SpeedFactor);
-                    RFM.setPower(((fwd + str) + trn) * SpeedFactor);
+                    leftBackMotor.setPower(((fwd + str) - trn) * SpeedFactor);
+                    leftFrontMotor.setPower(((fwd - str) - trn) * SpeedFactor);
+                    rightBackMotor.setPower(((fwd - str) + trn) * SpeedFactor);
+                    rightFrontMotor.setPower(((fwd + str) + trn) * SpeedFactor);
 
                     telemetry.addData("LockOn(OPTION)", "ON");
                     telemetry.addData("turnAssist", turnAssist);
@@ -173,26 +173,26 @@ public class THESTINK extends LinearOpMode {
 
                 // intake
                 if (gamepad1.right_bumper) {
-                    INTAKE.setPower(1);
+                    intakeMotor.setPower(1);
                 } else if (gamepad1.left_bumper) {
-                    INTAKE.setPower(-1);
+                    intakeMotor.setPower(-1);
                 } else if (gamepad1.y) {
-                    INTAKE.setPower(1);
+                    intakeMotor.setPower(1);
                 } else {
-                    INTAKE.setPower(0);
+                    intakeMotor.setPower(0);
                 }
 
                 //brake
                 if (gamepad2.x) {
-                    LBM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    LFM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    RBM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    RFM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 } else {
-                    LBM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                    LFM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                    RBM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                    RFM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                    leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                    leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                    rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                    rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 }
 
                 // servo
@@ -226,15 +226,12 @@ public class THESTINK extends LinearOpMode {
         }
     }
 
-    private void SpinFlyWheel(double Speed, int Dirrection) {
-        leftFlexWheel.setPower(Speed * Dirrection);
-        rightFlexWheel.setPower(Speed * -Dirrection);
+    private void SpinFlyWheel(double Speed, int Direction) {
+        leftFlexWheel.setPower(Speed * Direction);
+        rightFlexWheel.setPower(Speed * -Direction);
 
     }
     private double clip(double v, double min, double max) {
         return Math.max(min, Math.min(max, v));
-    }
-    {
-
     }
 }

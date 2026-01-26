@@ -37,7 +37,7 @@ that you can still get to your target velocity.
 public class FlywheelTuning extends OpMode {
     private PIDFController controller;
     private DcMotorEx encoder;
-    private DcMotorEx leftMotor, rightMotor;
+    private DcMotorEx leftShooterMotor, rightShooterMotor;
     public static double targetVelocity, encoderVelocity, velocity;
     public static double P, I , kV, kA , kS;
     @Override
@@ -46,11 +46,11 @@ public class FlywheelTuning extends OpMode {
         telemetry = new JoinedTelemetry(PanelsTelemetry.INSTANCE.getFtcTelemetry(), telemetry);
 
         encoder = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightHoodMotor");
-        leftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftHoodMotor"); // change directions if needed
-        rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightHoodMotor"); // change directions if needed
+        leftShooterMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftHoodMotor"); // change directions if needed
+        rightShooterMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightHoodMotor"); // change directions if needed
 
         encoder.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightShooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         controller = new PIDFController(P, I, 0.0, 0.0, kV, 0.0, 0.1338); // PIDF, Feedforward(kV, kA, kS)
     }
@@ -69,7 +69,7 @@ public class FlywheelTuning extends OpMode {
         encoderVelocity = encoder.getVelocity();
         velocity = (encoderVelocity / 8192f) * 60;
 
-        leftMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
-       // rightMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
+        leftShooterMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
+       // rightShooterMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
     }
 }
