@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name = "Limelight SIMPLE Lock", group = "TeleOp")
+@TeleOp(name = "DECODE Teleop", group = "TeleOp")
 public class LimelightLock extends LinearOpMode {
 
     private DcMotor leftFrontMotor;
@@ -24,7 +24,7 @@ public class LimelightLock extends LinearOpMode {
     private DcMotor rightFrontMotor;
     private DcMotor rightBackMotor;
     private DcMotor intakeMotor;
-    private CRServo servo;
+    private CRServo transferServo;
     private DcMotorEx leftFlexWheel;
     private DcMotorEx rightFlexWheel;
     private DcMotorEx encoder;
@@ -50,13 +50,13 @@ public class LimelightLock extends LinearOpMode {
         boolean my_1PersonDrive;
         boolean holdingArmMotors;
 
-        leftFrontMotor = hardwareMap.get(DcMotor.class, "LFM");
-        leftBackMotor = hardwareMap.get(DcMotor.class, "LBM");
-        rightFrontMotor = hardwareMap.get(DcMotor.class, "RFM");
-        rightBackMotor = hardwareMap.get(DcMotor.class, "RBM");
-        intakeMotor = hardwareMap.get(DcMotor.class, "INTAKE");
-        servo = hardwareMap.get(CRServo.class, "servo");
-        encoder = hardwareMap.get(DcMotorEx.class, "encoder");
+        leftFrontMotor = hardwareMap.get(DcMotor.class, "leftFrontMotor");
+        leftBackMotor = hardwareMap.get(DcMotor.class, "leftBackMotor");
+        rightFrontMotor = hardwareMap.get(DcMotor.class, "rightFrontMotor");
+        rightBackMotor = hardwareMap.get(DcMotor.class, "rightBackMotor");
+        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+        transferServo = hardwareMap.get(CRServo.class, "transferServo");
+        encoder = hardwareMap.get(DcMotorEx.class, "encoder"); // change later
         leftFlexWheel = hardwareMap.get(DcMotorEx.class, "leftFlexWheel");
         rightFlexWheel = hardwareMap.get(DcMotorEx.class, "rightFlexWheel");
 
@@ -197,11 +197,11 @@ public class LimelightLock extends LinearOpMode {
 
                 // servo
                 if (gamepad1.dpad_left) {
-                    servo.setPower(0.85);
+                    transferServo.setPower(0.85);
                 } else if (gamepad1.dpad_right) {
-                    servo.setPower(-0.85);
+                    transferServo.setPower(-0.85);
                 } else {
-                    servo.setPower(0);
+                    transferServo.setPower(0);
                 }
                 if (gamepad1.dpad_up) {
                     SpinFlyWheel(-0.85, 1);

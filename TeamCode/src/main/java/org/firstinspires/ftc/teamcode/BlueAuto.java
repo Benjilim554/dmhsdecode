@@ -1,10 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.JoinedTelemetry;
-
-import org.firstinspires.ftc.teamcode.subsystem.util.PIDFController;
-
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
@@ -19,4 +14,5 @@ private Timer timer;
 private Pose currentPose;
 private int pathState = 0; // finite state machine variable
 private boolean init = true;
+
 }
