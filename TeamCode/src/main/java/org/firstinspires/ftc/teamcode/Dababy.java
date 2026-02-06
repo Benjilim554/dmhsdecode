@@ -121,7 +121,7 @@ public class Dababy extends LinearOpMode {
 
         Limelight.start();
 
-        try {
+
             while (opModeIsActive()) {
 
 
@@ -284,8 +284,5 @@ public class Dababy extends LinearOpMode {
 
                 }
             }
-        } finally {
-            try { Limelight.stop(); } catch (Exception ignored) {}
-        }
     }
 }
