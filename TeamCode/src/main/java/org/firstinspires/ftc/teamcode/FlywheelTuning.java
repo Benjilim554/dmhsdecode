@@ -50,7 +50,7 @@ public class FlywheelTuning extends OpMode {
         rightShooterMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightHoodMotor"); // change directions if needed
 
         encoder.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightShooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightShooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         controller = new PIDFController(P, I, 0.0, 0.0, kV, 0.0, 0.1338); // PIDF, Feedforward(kV, kA, kS)
     }
@@ -66,10 +66,9 @@ public class FlywheelTuning extends OpMode {
         controller.setPIDF(P, I, 0.0, 0);
         controller.setFeedforward(kV, 0, kS);
 
-        encoderVelocity = encoder.getVelocity();
-        velocity = (encoderVelocity / 8192f) * 60;
+        velocity = encoder.getVelocity();
 
         leftShooterMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
-       // rightShooterMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
+        rightShooterMotor.setPower(controller.calculate((targetVelocity - velocity), targetVelocity, 0));
     }
 }
