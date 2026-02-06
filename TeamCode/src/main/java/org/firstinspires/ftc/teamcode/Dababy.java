@@ -80,9 +80,9 @@ public class Dababy extends LinearOpMode {
         rightBackMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightBackMotor");
         rightFrontMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightFrontMotor");
 
-        transferServo = (CRServo) hardwareMap.get(DcMotor.class, "transferServo");
-        leftAxonHood = (CRServo) hardwareMap.get(CRServo.class, "leftAxonHood");
-        rightAxonHood = (CRServo) hardwareMap.get(CRServo.class, "rightAxonHood");
+        transferServo = (CRServo) hardwareMap.get(CRServo.class, "transferServo");
+        leftAxonHood = (CRServo) hardwareMap.get(CRServo.class, "axonPowerLeft");
+        rightAxonHood = (CRServo) hardwareMap.get(CRServo.class, "axonPowerRight");
 
         Limelight = hardwareMap.get(Limelight3A.class, "limelight");
         Limelight.pipelineSwitch(1); // pipeline 1 is all the tags, pipeline 2 is tag 22 and pipeline 3 is tag 24
@@ -103,6 +103,7 @@ public class Dababy extends LinearOpMode {
         leftShooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightShooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE); //TODO: Change later bitch
 
@@ -167,7 +168,7 @@ public class Dababy extends LinearOpMode {
                     leftBackMotor.setPower(Math.pow(gamepad1.left_stick_y + gamepad1.left_stick_x - rx, ctrlPow) * Math.signum(gamepad1.left_stick_y + gamepad1.left_stick_x - rx));
 
 
-                    boolean lockOn = gamepad1.cross; // okay so trigger doesnt work? so ima switch it to option, just cuz it would work
+                    boolean lockOn = gamepad1.dpad_left; // okay so trigger doesnt work? so ima switch it to option, just cuz it would work
                     if (lockOn && tagDetected) {
                         double turnAssist = clip(kTurn * tx, -maxTurn, maxTurn);
 
@@ -196,13 +197,13 @@ public class Dababy extends LinearOpMode {
                     // MATA DRIVER 1: Drive, intake, transfer
 
                     if (gamepad1.right_trigger > 0.1) {
-                        intakeMotor.setPower(1);
+                        intakeMotor.setPower(0.5);
                     } else {
                         intakeMotor.setPower(0);
                     }
 
                     if (gamepad1.right_bumper) {
-                        intakeMotor.setPower(-1);
+                        intakeMotor.setPower(-0.5);
                     } else {
                         intakeMotor.setPower(0);
                     }
