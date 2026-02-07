@@ -15,6 +15,7 @@ public class testclass extends LinearOpMode {
     private double rx;
     private double ctrlPow = 2.0;
 
+
     @Override
     public void runOpMode() {
         leftShooterMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftHoodMotor"); // change directions if needed
@@ -37,6 +38,7 @@ public class testclass extends LinearOpMode {
         rightBackMotor.setPower(Math.pow(gamepad1.left_stick_y - gamepad1.left_stick_x + rx, ctrlPow) * Math.signum(gamepad1.left_stick_y - gamepad1.left_stick_x + rx));
         leftBackMotor.setPower(Math.pow(gamepad1.left_stick_y + gamepad1.left_stick_x - rx, ctrlPow) * Math.signum(gamepad1.left_stick_y + gamepad1.left_stick_x - rx));
 
+        waitForStart();
         // MATA DRIVER 1: Drive, intake, transfer
 
         if (gamepad1.right_trigger > 0.1) {

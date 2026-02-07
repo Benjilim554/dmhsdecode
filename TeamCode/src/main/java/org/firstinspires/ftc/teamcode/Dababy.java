@@ -113,14 +113,9 @@ public class Dababy extends LinearOpMode {
                 0.065067     // kS
         );
 
-        telemetry.addLine("READY.");
-        telemetry.addLine("Limelight telemetry should say TAG DETECTED if valid.");
-        telemetry.update();
-
         waitForStart();
 
         Limelight.start();
-
 
             while (opModeIsActive()) {
 
@@ -188,8 +183,8 @@ public class Dababy extends LinearOpMode {
                     }
 
                     double currentVelocity = rightShooterMotor.getVelocity();
-                    telemetry.addData("TargetVel", targetVelocity);
-                    telemetry.addData("CurrentVel", velocity);
+                  /*  telemetry.addData("TargetVel", targetVelocity);
+                    telemetry.addData("CurrentVel", velocity); */
                     flywheelController.setPIDF(P, 0, 0.0, 0);
                     flywheelController.setFeedforward(0, 0, 0);
                     velocity = leftShooterMotor.getVelocity();
@@ -276,9 +271,9 @@ public class Dababy extends LinearOpMode {
                     curVelocity = rightShooterMotor.getVelocity();
                     error = curTargetVelocity + curVelocity;
 
-                    telemetry.addData("Target velocity", curTargetVelocity);
+                /*    telemetry.addData("Target velocity", curTargetVelocity);
                     telemetry.addData("Current Velocity", "%.2f", curVelocity);
-                    telemetry.addData("Error", "%.2f", error);
+                    telemetry.addData("Error", "%.2f", error); */
 
                     telemetry.update();
 
